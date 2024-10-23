@@ -36,21 +36,21 @@ void availableSpot(string car_name, map<string, int> &cars, map<int, spot_proper
         {
             if (it->second.status != OCCUPIED)
             {
-            cout << it->first << ": " << it->second.type << " ";
-            if (it->second.type == NORMAL)
-                cout << prices[cars[car_name]].first << " " << prices[cars[car_name]].second << endl;
-            else if (it->second.type == COVERED)
-            {
-                int static_price = prices[cars[car_name]].first + STATIC_PRICE_COVERED;
-                int per_day_price = prices[cars[car_name]].second + PER_DAY_COVERED;
-                cout << static_price << " " << per_day_price << endl;
-            }
-            else if (it->second.type == CCTV)
-            {
-                int static_price = prices[cars[car_name]].first + STATIC_PRICE_CCTV;
-                int per_day_price = prices[cars[car_name]].second + PER_DAY_CCTV;
-                cout << static_price << " " << per_day_price << endl;
-            }
+                cout << it->first << ": " << it->second.type << " ";
+                if (it->second.type == NORMAL)
+                    cout << prices[cars[car_name]].first << " " << prices[cars[car_name]].second << endl;
+                else if (it->second.type == COVERED)
+                {
+                    int static_price = prices[cars[car_name]].first + STATIC_PRICE_COVERED;
+                    int per_day_price = prices[cars[car_name]].second + PER_DAY_COVERED;
+                    cout << static_price << " " << per_day_price << endl;
+                }
+                else if (it->second.type == CCTV)
+                {
+                    int static_price = prices[cars[car_name]].first + STATIC_PRICE_CCTV;
+                    int per_day_price = prices[cars[car_name]].second + PER_DAY_CCTV;
+                    cout << static_price << " " << per_day_price << endl;
+                }
             }
         }
     }
@@ -82,7 +82,6 @@ void checkout(int id, map<int, spot_property> &parking_spots, map<int, pair<int,
     if (parking_spots[id].status == OCCUPIED)
     {
         parking_spots[id].status = FREE;
-        parking_spots[id].time = 0;
         cout << "Spot " << id << " is free now." << endl;
         int cost{0};
         if (parking_spots[id].type == NORMAL)
@@ -97,6 +96,7 @@ void checkout(int id, map<int, spot_property> &parking_spots, map<int, pair<int,
         {
             cost = prices[parking_spots[id].size].first + STATIC_PRICE_CCTV + (parking_spots[id].time) * (prices[parking_spots[id].size].second + PER_DAY_CCTV);
         }
+        parking_spots[id].time = 0;
         cout << "Total cost: " << cost << endl;
     }
 }
@@ -137,6 +137,7 @@ void carFile(string file_name, map<string, int> &cars)
 {
     fstream car_file(file_name);
     string line;
+    getline(car_file, line);
     while (car_file)
     {
         getline(car_file, line);
@@ -151,6 +152,7 @@ void parkingSpots(string file_name, map<int, spot_property> &parking_spots)
     string line;
     int id;
     spot_property type_size;
+    getline(spots_file, line);
     while (getline(spots_file, line))
     {
         size_t pos = line.find(',');
@@ -172,6 +174,7 @@ void priceFile(string file_name, map<int, pair<int, int>> &prices)
     int size;
     int price;
     size_t pos;
+    getline(price_file, line);
     while (getline(price_file, line))
     {
         pos = line.find(',');
